@@ -1,54 +1,169 @@
 // In App.js in a new project
 
 import * as React from 'react';
+import {View, Text, Button, TextInput} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-// import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-// You can import Ionicons from @expo/vector-icons/Ionicons if you use Expo or
-// react-native-vector-icons/Ionicons otherwise.
-import Ionicons from 'react-native-vector-icons/Ionicons';
-// import { Ionicons } from '@expo/vector-icons';
-// import Ionicons from 'react-native-vector-icons/FontAwesome';
-
-// 页面
-import HomeScreen from './src/page/HomeScreen/HomeScreen';
-import DetailsScreen from './src/page/DetailsScreen/DetailsScreen';
-import ShoppingCart from './src/page/ShoppingCart/ShoppingCart';
-// const Stack = createNativeStackNavigator();
-
-// 选项卡导航
+// 堆栈导航
+const Stack = createNativeStackNavigator();
+// 底部标签导航
 const Tab = createBottomTabNavigator();
+
+function HomeScreen({navigation, route}) {
+  React.useEffect(() => {
+    if (route.params?.post) {
+      // Post updated, do something with `route.params.post`
+      // For example, send the post to the server
+    }
+  }, [route.params?.post]);
+
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Home Screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => {
+          /* 1. Navigate to the Details route with params */
+          navigation.navigate('Details', {
+            itemId: 86,
+            otherParam: 'anything you want here',
+          });
+        }}
+      />
+      <Button
+        title="Create post"
+        onPress={() => {
+          navigation.navigate('CreatePost');
+        }}
+      />
+      <Button
+        title="GO to TabHome"
+        onPress={() => {
+          navigation.navigate('TabHome');
+        }}
+      />
+      <Text style={{margin: 10}}>Post: {route.params?.post}</Text>
+    </View>
+  );
+}
+
+function CreatePostScreen({navigation, route}) {
+  const [postText, setPostText] = React.useState('');
+
+  return (
+    <>
+      <TextInput
+        multiline
+        placeholder="What's on your mind?"
+        style={{height: 200, padding: 10, backgroundColor: 'white'}}
+        value={postText}
+        onChangeText={setPostText}
+      />
+      <Button
+        title="Done"
+        onPress={() => {
+          // Pass and merge params back to home screen
+          navigation.navigate({
+            name: 'Home',
+            params: {post: postText},
+            merge: true,
+          });
+        }}
+      />
+    </>
+  );
+}
+
+function DetailsScreen({route, navigation}) {
+  /* 2. Get the param */
+  const {itemId, otherParam, query} = route.params;
+
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Details Screen</Text>
+      <Text>itemId: {JSON.stringify(itemId)}</Text>
+      <Text>otherParam: {JSON.stringify(otherParam)}</Text>
+      <Text>query: {JSON.stringify(query)}</Text>
+
+      <Button
+        title="Updating params"
+        onPress={() => {
+          navigation.setParams({
+            query: 'someText',
+          });
+        }}
+      />
+
+      <Button
+        title="Go to Details... again"
+        onPress={() => {
+          navigation.navigate('Details');
+
+          // navigation.push('Details', {
+          //   itemId: Math.floor(Math.random() * 100),
+          // })
+        }}
+      />
+      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+    </View>
+  );
+}
+
+function Feed({route, navigation}) {
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Feed</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => {
+          /* 1. Navigate to the Details route with params */
+          navigation.navigate('Details', {
+            itemId: 86,
+            otherParam: 'anything you want here',
+          });
+        }}
+      />
+    </View>
+  );
+}
+
+function Messages({route, navigation}) {
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Messages</Text>
+    </View>
+  );
+}
+
+function TabHome() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Feed" component={Feed} />
+      <Tab.Screen name="Messages" component={Messages} />
+    </Tab.Navigator>
+  );
+}
 
 function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color, size}) => {
-            let iconName;
-            if (route.name === 'Home') {
-              iconName = focused ? 'home-outline' : 'home-sharp';
-            } else if (route.name === 'Details') {
-              iconName = focused ? 'user-o' : 'user';
-            } else {
-              iconName = focused ? 'user-o' : 'user';
-            }
-
-            // You can return any component that you like here!
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: 'tomato',
-          tabBarInactiveTintColor: 'gray',
-        })}>
-        <Tab.Screen
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="TabHome" component={TabHome} />
+        <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{tabBarBadge: 3}}
+          options={{title: 'Overview'}}
         />
-        <Tab.Screen name="Details" component={DetailsScreen} />
-        <Tab.Screen name="ShoppingCart" component={ShoppingCart} />
-      </Tab.Navigator>
+        <Stack.Screen
+          name="Details"
+          component={DetailsScreen}
+          initialParams={{itemId: 42}}
+        />
+        <Stack.Screen name="CreatePost" component={CreatePostScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
