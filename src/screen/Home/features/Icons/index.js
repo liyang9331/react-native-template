@@ -5,24 +5,7 @@ import {iconsUrl, queryIcons, IconType} from '../../api/homeAPI';
 
 import Grid from '../../components/Grid';
 
-export interface CateIconType extends IconType {
-  icon: string;
-  text: string;
-  onPress: () => void;
-}
-
-export interface RecyclerIcons {
-  width: number;
-  height: number;
-  type: string;
-  icons: CateIconType[];
-}
-
-interface CateIconsProps {
-  row: RecyclerIcons;
-}
-
-const CateIcons: React.FC<CateIconsProps> = ({row}) => {
+const CateIcons = ({row}) => {
   const [indicator, setIndicator] = useState(0);
 
   const {icons, height, width} = row;
@@ -81,10 +64,10 @@ const wrapperHeight = 200;
 
 // RecyclerListView 需要提前计算各种宽高
 // 因为 queryRecyclerIcons 主要是计算 CateIcons 的宽高，把它们俩放在一个文件中更好维护。
-export const queryRecyclerIcons = async (): Promise<RecyclerIcons> => {
+export const queryRecyclerIcons = async () => {
   const data = await queryIcons();
 
-  const cateIcons: CateIconType[] = data?.map(icon => ({
+  const cateIcons = data?.map(icon => ({
     // 转为 Grid 组件的格式
     ...icon,
     onPress: () => {},

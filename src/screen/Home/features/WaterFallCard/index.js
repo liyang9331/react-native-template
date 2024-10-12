@@ -1,30 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
-import {FetchInfiniteQueryOptions} from 'react-query';
+import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
+import { FetchInfiniteQueryOptions } from 'react-query';
 
-import {queryAnimals, NFTType, NFTQueryType} from '../../api/homeAPI';
+import { queryAnimals } from '../../api/homeAPI';
 import getNumberOfLine from '../../utils/getNumberOfLine';
 
-export interface RecyclerNFT extends NFTType {
-  screenImageHeight: number;
-  screenImageWidth: number;
-  numberOfLines: number;
-  likedStr: string;
-  width: number;
-  height: number;
-  type: string;
-}
-
-export interface RecyclerNFTs extends NFTQueryType {
-  items: RecyclerNFT[];
-}
-
-interface WaterFallProps {
-  row: RecyclerNFT;
-}
-
-const WaterFallCard: React.FC<WaterFallProps> = ({row}) => {
-  const {screenImageHeight, screenImageWidth, numberOfLines} = row;
+const WaterFallCard = ({ row }) => {
+  const { screenImageHeight, screenImageWidth, numberOfLines } = row;
 
   // 一个 Row 的 height = 图片高度 + 图片和标题的间距 + numberOfLines*文字行高 + 标题和名字的间距 + 名字行高 + 名字和底部的间距 + 两个Row的上下间距
   return (
@@ -52,7 +34,7 @@ const WaterFallCard: React.FC<WaterFallProps> = ({row}) => {
   );
 };
 
-export const recyclerQueryOption: FetchInfiniteQueryOptions<RecyclerNFTs> = {
+export const recyclerQueryOption = {
   // determining if there is more data to load and the information to fetch it
   getPreviousPageParam: firstPage => firstPage.requestId ?? false,
   getNextPageParam: lastPage => lastPage.requestId ?? false,
@@ -60,10 +42,10 @@ export const recyclerQueryOption: FetchInfiniteQueryOptions<RecyclerNFTs> = {
 
 // RecyclerListView 需要提前计算各种宽高
 // 因为 queryRecyclerAnimals 主要是计算 RowRender 的宽高，把它们俩放在一个文件中更好维护。
-export const queryRecyclerAnimals = async ({pageParam = 0}) => {
-  const data = await queryAnimals({pageParam});
+export const queryRecyclerAnimals = async ({ pageParam = 0 }) => {
+  const data = await queryAnimals({ pageParam });
 
-  const items = data.items.map((item: any, index: number) => {
+  const items = data.items.map((item, index) => {
     // mock: 从服务端获取宽高
     const imageWidth = halfWindowWidth + ((index % 9) + 4);
     const imageHeight = ((index % 9) + 4) * 20;
@@ -104,7 +86,7 @@ export const queryRecyclerAnimals = async ({pageParam = 0}) => {
       type: 'CARD', // 瀑布流卡片
     };
   });
-  return {...data, items};
+  return { ...data, items };
 };
 
 const halfWindowWidth = Dimensions.get('window').width / 2;
@@ -133,9 +115,9 @@ const styles = StyleSheet.create({
     marginHorizontal: titleSize,
     marginBottom: VerticalSpace,
   },
-  nameBox: {flexDirection: 'row', marginHorizontal: titleSize},
-  name: {flex: 1, fontSize: 12},
-  liked: {fontSize: 12},
+  nameBox: { flexDirection: 'row', marginHorizontal: titleSize },
+  name: { flex: 1, fontSize: 12 },
+  liked: { fontSize: 12 },
 });
 
 export default WaterFallCard;

@@ -1,16 +1,8 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 
-export type HandleCatePress = (cateId: string) => void;
 
-interface CateTitleProps {
-  handlePress: HandleCatePress;
-  cateId: string;
-  active?: boolean;
-  children: string;
-}
-
-const CateTitle: React.FC<CateTitleProps> = ({
+const CateTitle = ({
   active,
   handlePress,
   cateId,

@@ -13,10 +13,10 @@ const CATES = {
   },
 };
 
-const TopBar: React.FC = () => {
+const TopBar = () => {
   const [activeCate, setActiveCate] = useState(CATES.home.id);
 
-  const handlePress: HandleCatePress = cateId => setActiveCate(cateId);
+  const handlePress = cateId => setActiveCate(cateId);
 
   return (
     <View style={styles.box}>

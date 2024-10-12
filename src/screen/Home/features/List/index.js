@@ -25,14 +25,14 @@ import {
 import {queryRecyclerIcons, RecyclerIcons} from '../Icons';
 import RowRenderer from './RowRenderer';
 
-const App: React.FC = () => {
+const App = () => {
   const {
     status,
     data: recyclerNFTs,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery<RecyclerNFTs>(
+  } = useInfiniteQuery(
     animalsUrl,
     queryRecyclerAnimals,
     recyclerQueryOption,
@@ -46,10 +46,10 @@ const App: React.FC = () => {
   } = useQuery<RecyclerIcons>(iconsUrl, queryRecyclerIcons);
 
   // 格式处理
-  const nfts = recyclerNFTs?.pages.reduce<RecyclerNFT[]>(
+  const nfts = recyclerNFTs?.pages.reduce(
     (accumulator, page) => {
       return accumulator.concat(
-        page.items.reduce<RecyclerNFT[]>((all, group) => all.concat(group), []),
+        page.items.reduce((all, group) => all.concat(group), []),
       );
     },
     [],

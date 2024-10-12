@@ -8,9 +8,9 @@
  * */
 
 export default function getNumberOfLines(
-  str: string,
-  fontSize: number,
-  width: number,
+  str,
+  fontSize,
+  width,
 ) {
   if (!str) {
     return 0;
@@ -18,7 +18,7 @@ export default function getNumberOfLines(
   return Math.ceil(getStrWidth(str, fontSize) / width);
 }
 
-function getStrWidth(str: string, fontSize: number) {
+function getStrWidth(str, fontSize) {
   const scale = fontSize / 17;
   const capitalWidth = 11 * scale;
   const lowerWidth = 8.6 * scale;
@@ -43,23 +43,16 @@ function getStrWidth(str: string, fontSize: number) {
   return Math.ceil(width / fontSize) * fontSize;
 }
 
-interface ChartWidthType {
-  capitalWidth: number;
-  lowerWidth: number;
-  spaceWidth: number;
-  numberWidth: number;
-  chineseWidth: number;
-}
 
 export function getCharWidth(
-  char: string,
+  char,
   {
     capitalWidth,
     lowerWidth,
     spaceWidth,
     numberWidth,
     chineseWidth,
-  }: ChartWidthType,
+  },
 ) {
   let width;
 

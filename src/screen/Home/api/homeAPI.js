@@ -1,41 +1,5 @@
 import axios from 'axios';
-import {Dimensions} from 'react-native';
-
-export interface Picture {
-  id?: string;
-  image: string;
-  name: string;
-  motto: string;
-  liked: number;
-}
-
-export interface PictureList {
-  active?: boolean;
-  cate: string;
-  list: Picture[];
-}
-
-export interface NFTType {
-  id: string;
-  image: string;
-  name: string;
-  motto: string;
-  liked: number;
-  imageWidth?: number;
-  imageHeight?: number;
-}
-
-export interface NFTQueryType {
-  requestId: string;
-  items: NFTType[];
-  count: number;
-}
-
-export interface IconType {
-  image: string;
-  title: string;
-  id: string;
-}
+import { Dimensions } from 'react-native';
 
 // 这里用的是 https://mockapi.io，如果是业务请求，建议将首屏主要接口合并成一个，减少闪屏
 export const animalsUrl = 'https://61c48e65f1af4a0017d9966d.mockapi.io/animals';
@@ -44,29 +8,29 @@ export const iconsUrl = 'https://61c48e65f1af4a0017d9966d.mockapi.io/icons';
 
 const halfWindowWidth = Dimensions.get('window').width / 2;
 
-export async function queryIcons(): Promise<IconType[]> {
-  const {data} = await axios.get<IconType[]>(`${iconsUrl}`);
+export async function queryIcons() {
+  const {data} = await axios.get(`${iconsUrl}`);
   return data.map(item => ({
     ...item,
     image: item.image.replace('http://', 'https://'),
   }));
 }
 
-export async function queryAnimals({pageParam = 0}): Promise<NFTQueryType> {
-  const {data} = await axios.get(`${animalsUrl}?page=${pageParam}`);
+export async function queryAnimals({ pageParam = 0 }) {
+  const { data } = await axios.get(`${animalsUrl}?page=${pageParam}`);
   // 真正从需要从后端拿到的数据
   return formatMock(data);
 }
 
-export async function queryCats({pageParam = 0}): Promise<NFTQueryType> {
-  const {data} = await axios.get(`${catsUrl}?page=${pageParam}`);
+export async function queryCats({ pageParam = 0 }) {
+  const { data } = await axios.get(`${catsUrl}?page=${pageParam}`);
   // 真正从需要从后端拿到的数据
   return formatMock(data);
 }
 
 // mock 数据源，不完全符合业务需求，此处做了兼容
-function formatMock(mockData: NFTQueryType): NFTQueryType {
-  const items: NFTType[] = mockData.items.map((item: any, index: number) => {
+function formatMock(mockData) {
+  const items = mockData.items.map((item, index) => {
     // recyclerListView 的高度需要服务端下发，这里随机了生成的
     const imageWidth = halfWindowWidth + ((index % 9) + 4);
     const imageHeight = ((index % 8) + 5) * 20;
@@ -81,5 +45,5 @@ function formatMock(mockData: NFTQueryType): NFTQueryType {
       imageHeight,
     };
   });
-  return {...mockData, items};
+  return { ...mockData, items };
 }

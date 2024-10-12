@@ -2,11 +2,11 @@ import React from 'react';
 import WaterFallCard, {RecyclerNFT} from '../WaterFallCard';
 import Icons, {RecyclerIcons} from '../Icons';
 
-function RowRenderer(type: number | string, data: RecyclerNFT | RecyclerIcons) {
+function RowRenderer(type, data) {
   if (type === 'CARD') {
-    return <WaterFallCard row={data as RecyclerNFT} />;
+    return <WaterFallCard row={data} />;
   } else if (type === 'ICONS') {
-    return <Icons row={data as RecyclerIcons} />;
+    return <Icons row={data} />;
   }
   return null;
 }
